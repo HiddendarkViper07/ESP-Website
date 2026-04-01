@@ -428,9 +428,6 @@ def write_sheet(
 
     # Bold the header row
     ws.format("1", {"textFormat": {"bold": True}})
-
-    # Auto-resize isn't available via gspread, but freeze the header
-
     print(f"  ✓ '{title}' – {len(rows) - 1} data rows written")
 
 
