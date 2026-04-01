@@ -35,6 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOOGLE_SA_KEY: ${{ secrets.GOOGLE_SA_KEY }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
           REPO_OWNER: HiddenDarkViper07
           REPO_NAME: ESP-Website
         run: |
