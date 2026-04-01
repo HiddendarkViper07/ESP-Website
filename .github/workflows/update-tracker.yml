@@ -2,7 +2,6 @@ name: Update Project Tracker Sheet
 
 on:
   schedule:
-    # Runs daily at 8:00 AM UTC
     - cron: '0 8 * * *'
   workflow_dispatch:
 
@@ -11,8 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository with clean state
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: true
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -22,8 +24,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r .github/scripts/project-tracker/requirements.txt
 
-      - name: Debug - List files (optional but helpful)
-        run: ls -R .github/scripts/
+      - name: Verify script file (DEBUG)
+        run: |
+          echo "=== Checking script file ==="
+          cat .github/scripts/project-tracker/update_project_sheet.py | grep -n "freeze" || echo "No freeze found - GOOD!"
+          echo "=== End check ==="
 
       - name: Update Google Sheet
         env:
@@ -33,11 +38,13 @@ jobs:
           REPO_OWNER: HiddenDarkViper07
           REPO_NAME: ESP-Website
         run: |
-          # Clear Python cache files
-          echo "Clearing Python cache..."
-          find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-          find . -type f -name "*.pyc" -delete 2>/dev/null || true
+          # Force clean everything
+          echo "=== Force cleaning ==="
+          sudo rm -rf /home/runner/work/ESP-Website/ESP-Website/.github/scripts/project-tracker/__pycache__
+          sudo rm -rf /home/runner/work/_temp/*
           
-          # Clear any cached script files
-          echo "Cache cleared. Running script..."
+          echo "=== Re-checking script ==="
+          cat .github/scripts/project-tracker/update_project_sheet.py | grep -n "freeze" || echo "No freeze in script"
+          
+          echo "=== Running script ==="
           python .github/scripts/project-tracker/update_project_sheet.py
