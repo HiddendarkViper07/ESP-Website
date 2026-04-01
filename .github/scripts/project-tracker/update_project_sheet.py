@@ -30,7 +30,7 @@ from google.oauth2.service_account import Credentials
 
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GOOGLE_SA_KEY = os.environ["GOOGLE_SA_KEY"]
-SHEET_ID = os.environ["SHEET_ID"]
+SHEET_ID = os.environ.get("GOOGLE_SHEET_ID", os.environ.get("SHEET_ID", ""))
 REPO_OWNER = os.environ.get("REPO_OWNER", "learning-unlimited")
 REPO_NAME = os.environ.get("REPO_NAME", "ESP-Website")
 
