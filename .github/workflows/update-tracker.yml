@@ -29,3 +29,12 @@ jobs:
           REPO_OWNER: ${{ vars.REPO_OWNER }}
           REPO_NAME: ${{ vars.REPO_NAME }}
         run: python .github/scripts/project-tracker/update_project_sheet.py
+      - name: Clear GitHub Actions Cache
+        run: |
+          echo "Clearing cache..."
+          rm -rf ~/.cache/pip
+          rm -rf ~/.cache/poetry
+          find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+          find . -type f -name "*.pyc" -delete 2>/dev/null || true
+          sudo rm -rf /home/runner/work/_temp/*
+          echo "Cache cleared!"
