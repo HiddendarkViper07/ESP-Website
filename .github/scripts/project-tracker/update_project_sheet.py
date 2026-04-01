@@ -10,7 +10,7 @@ GraphQL API and writes three summary sheets to a Google Spreadsheet:
 Required environment variables:
   GITHUB_TOKEN   – GitHub token with repo read access (provided by Actions)
   GOOGLE_SA_KEY  – JSON string of a Google service-account key
-  SHEET_ID       – ID of the target Google Spreadsheet
+  GOOGLE_SHEET_ID – ID of the target Google Spreadsheet
   REPO_OWNER     – GitHub repository owner (org or user)
   REPO_NAME      – GitHub repository name
 """
@@ -30,7 +30,7 @@ from google.oauth2.service_account import Credentials
 
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GOOGLE_SA_KEY = os.environ["GOOGLE_SA_KEY"]
-SHEET_ID = os.environ.get("GOOGLE_SHEET_ID", os.environ.get("SHEET_ID", ""))
+SHEET_ID = os.environ["GOOGLE_SHEET_ID"]
 REPO_OWNER = os.environ.get("REPO_OWNER", "learning-unlimited")
 REPO_NAME = os.environ.get("REPO_NAME", "ESP-Website")
 
