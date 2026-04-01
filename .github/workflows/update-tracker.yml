@@ -32,4 +32,12 @@ jobs:
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
           REPO_OWNER: HiddenDarkViper07
           REPO_NAME: ESP-Website
-        run: python .github/scripts/project-tracker/update_project_sheet.py
+        run: |
+          # Clear Python cache files
+          echo "Clearing Python cache..."
+          find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+          find . -type f -name "*.pyc" -delete 2>/dev/null || true
+          
+          # Clear any cached script files
+          echo "Cache cleared. Running script..."
+          python .github/scripts/project-tracker/update_project_sheet.py
