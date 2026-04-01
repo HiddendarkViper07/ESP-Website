@@ -10,11 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository with clean state
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          clean: true
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -24,28 +21,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r .github/scripts/project-tracker/requirements.txt
 
-      - name: Verify script file (DEBUG)
-        run: |
-          echo "=== Checking script file ==="
-          cat .github/scripts/project-tracker/update_project_sheet.py | grep -n "freeze" || echo "No freeze found - GOOD!"
-          echo "=== End check ==="
-
       - name: Update Google Sheet
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOOGLE_SA_KEY: ${{ secrets.GOOGLE_SA_KEY }}
-          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
           SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
-          REPO_OWNER: HiddenDarkViper07
-          REPO_NAME: ESP-Website
-        run: |
-          # Force clean everything
-          echo "=== Force cleaning ==="
-          sudo rm -rf /home/runner/work/ESP-Website/ESP-Website/.github/scripts/project-tracker/__pycache__
-          sudo rm -rf /home/runner/work/_temp/*
-          
-          echo "=== Re-checking script ==="
-          cat .github/scripts/project-tracker/update_project_sheet.py | grep -n "freeze" || echo "No freeze in script"
-          
-          echo "=== Running script ==="
-          python .github/scripts/project-tracker/update_project_sheet.py
+          REPO_OWNER: ${{ vars.REPO_OWNER }}
+          REPO_NAME: ${{ vars.REPO_NAME }}
+        run: python .github/scripts/project-tracker/update_project_sheet.py
