@@ -150,6 +150,8 @@ class StudentRegCore(ProgramModuleObj, CoreModule):
             already_on_list = False
         else:
             already_on_list = True
+          
+        context['is_module_page'] = True
 
         return render_to_response(self.baseDir()+'waitlist.html', request, { 'already_on_list': already_on_list })
 
