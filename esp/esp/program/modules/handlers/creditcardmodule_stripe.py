@@ -49,7 +49,7 @@ from decimal import Decimal
 import stripe
 import json
 import re
-
+import logging
 class CreditCardModule_Stripe(ProgramModuleObj):
     doc = """Accept credit card payments via Stripe."""
 
