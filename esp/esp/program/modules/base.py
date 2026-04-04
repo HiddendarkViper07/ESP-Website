@@ -70,6 +70,7 @@ class CoreModule(object):
     pass
 
 class ProgramModuleObj(models.Model):
+    hideNotRequired = False
     program  = models.ForeignKey(Program, on_delete=models.CASCADE)
     module   = models.ForeignKey(ProgramModule, on_delete=models.CASCADE)
     seq      = models.IntegerField()
