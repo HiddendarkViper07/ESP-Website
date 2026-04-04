@@ -132,27 +132,32 @@ class StudentRegCore(ProgramModuleObj, CoreModule):
         return retVal
 
     @aux_call
-    @needs_student_in_grade
-    def waitlist_subscribe(self, request, tl, one, two, module, extra, prog):
-        """ Add this user to the waitlist """
-        self.request = request
+@needs_student_in_grade
+def waitlist_subscribe(self, request, tl, one, two, module, extra, prog):
+    """ Add this user to the waitlist """
+    self.request = request
 
-        if prog.user_can_join(request.user):
-            return self.goToCore(tl)
+    if prog.user_can_join(request.user):
+        return self.goToCore(tl)
 
-        waitlist = Record.objects.filter(event__name="waitlist",
-                                         user=request.user,
-                                         program=prog)
+    waitlist = Record.objects.filter(event__name="waitlist",
+                                     user=request.user,
+                                     program=prog)
 
-        if waitlist.count() <= 0:
-            Record.objects.create(event__name="waitlist", user=request.user,
-                                  program=prog)
-            already_on_list = False
-        else:
-            already_on_list = True
-        context['is_module_page'] = True
+    if waitlist.count() <= 0:
+        Record.objects.create(event__name="waitlist", user=request.user,
+                              program=prog)
+        already_on_list = False
+    else:
+        already_on_list = True
 
-        return render_to_response(self.baseDir()+'waitlist.html', request, { 'already_on_list': already_on_list })
+    context = {
+        'already_on_list': already_on_list
+    }
+
+    context['is_module_page'] = True
+
+    return render_to_response(self.baseDir()+'waitlist.html', request, context)
 
     @aux_call
     @needs_student_in_grade
