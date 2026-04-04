@@ -1,3 +1,4 @@
+import gspread
 def write_sheet(
     spreadsheet: gspread.Spreadsheet,
     title: str,
