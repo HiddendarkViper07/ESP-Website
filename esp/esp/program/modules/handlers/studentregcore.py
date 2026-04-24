@@ -32,7 +32,7 @@ Learning Unlimited, Inc.
   Email: web-team@learningu.org
 """
 from argcache            import cache_function
-from esp.program.modules.base import ProgramModuleObj, needs_student_in_grade, needs_student_in_grade, meets_deadline, CoreModule, main_call, aux_call, _checkDeadline_helper, meets_cap
+from esp.program.modules.base import ProgramModuleObj, needs_student_in_grade, meets_deadline, CoreModule, main_call, aux_call, _checkDeadline_helper, meets_cap
 from esp.program.controllers.confirmation import ConfirmationEmailController
 from esp.program.controllers.studentclassregmodule import RegistrationTypeController as RTC
 from esp.tagdict.models import Tag
@@ -132,32 +132,34 @@ class StudentRegCore(ProgramModuleObj, CoreModule):
         return retVal
 
     @aux_call
-@needs_student_in_grade
-def waitlist_subscribe(self, request, tl, one, two, module, extra, prog):
-    """ Add this user to the waitlist """
-    self.request = request
-    if prog.user_can_join(request.user):
-        return self.goToCore(tl)
-    waitlist = Record.objects.filter(event__name="waitlist",
-                                     user=request.user,
-                                     program=prog)
-    if waitlist.count() <= 0:
-        Record.objects.create(event__name="waitlist", user=request.user,
-                              program=prog)
-        already_on_list = False
-    else:
-        already_on_list = True
-    context = {
-        'already_on_list': already_on_list
-    }
-    context['is_module_page'] = True
-    return render_to_response(self.baseDir()+'waitlist.html', request, context)
+    @needs_student_in_grade
+    def waitlist_subscribe(self, request, tl, one, two, module, extra, prog):
+        """ Add this user to the waitlist """
+        self.request = request
+        if prog.user_can_join(request.user):
+            return self.goToCore(tl)
+        waitlist = Record.objects.filter(event__name="waitlist",
+                                         user=request.user,
+                                         program=prog)
+        if waitlist.count() <= 0:
+            Record.objects.create(event__name="waitlist", user=request.user,
+                                  program=prog)
+            already_on_list = False
+        else:
+            already_on_list = True
+        context = {
+            'already_on_list': already_on_list
+        }
+        context['is_module_page'] = True
+        return render_to_response(self.baseDir()+'waitlist.html', request, context)
+
     @aux_call
     @needs_student_in_grade
     def confirmreg(self, request, tl, one, two, module, extra, prog):
         if Record.objects.filter(user=request.user, event__name="reg_confirmed", program=prog).count() > 0:
             return self.confirmreg_forreal(request, tl, one, two, module, extra, prog, new_reg=False)
         return self.confirmreg_new(request, tl, one, two, module, extra, prog)
+
     @meets_deadline("/Confirm")
     @meets_cap
     def confirmreg_new(self, request, tl, one, two, module, extra, prog):
